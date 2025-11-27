@@ -11,10 +11,10 @@ try:
     conexao = mysql.connector.connect(
         host="localhost", user="root", password="", database="telas_python"
     )
-    print("Conexão bem sucedida!")
+    print("")
 
 except mysql.connector.Error as erro:
-    print(f"Erro ao conectar: {erro}")
+    print("")
 
 
 def cadastrar(entrada_n1, entrada_n2):
@@ -22,9 +22,9 @@ def cadastrar(entrada_n1, entrada_n2):
     senha = entrada_n2.get()
 
     if usuario == "" or senha == "":
-            messagebox.showwarning(title='atenção', message='login e senha nulos ???? nunca usou um cadastro')
+            messagebox.showwarning(title='Atenção', message='Digite um Usuário e uma Senha válidos.')
     else:
-        messagebox.showwarning(title='atenção', message='Deu boa parabens vc acertou um login')
+        messagebox.showwarning(title='Atenção', message='Cadastro realizado com sucesso.')
 
 
 
