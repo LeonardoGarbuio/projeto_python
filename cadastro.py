@@ -17,7 +17,7 @@ except mysql.connector.Error as erro:
     print(f"Erro ao conectar: {erro}")
 
 
-def cadastrar():
+def cadastrar(entrada_n1, entrada_n2):
     usuario = entrada_n1.get()
     senha = entrada_n2.get()
 
@@ -49,7 +49,7 @@ def abrir_cadastro():
     entrada_n2 = tk.Entry(janela, font=('Arial', 15, 'bold'), width=20)
     entrada_n2.pack(pady=10)
 
-    button1 = tk.Button(janela, text="cadastrar-se", command=cadastrar, bg="white")
+    button1 = tk.Button(janela, text="cadastrar-se", command=lambda: cadastrar(entrada_n1, entrada_n2), bg="white")
     button1.pack(pady=10)
 
 
