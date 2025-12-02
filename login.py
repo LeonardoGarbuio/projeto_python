@@ -39,7 +39,7 @@ def abre_janela():
 janela = tk.Tk()
 janela.title('Gordos burguer')
 janela.geometry('400x200')
-
+janela.iconbitmap("burguer.ico")
 
 form_campo = tk.Frame(janela)
 form_campo.pack(pady=20)
