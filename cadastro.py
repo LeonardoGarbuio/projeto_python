@@ -36,27 +36,27 @@ def cadastrar(entrada_n1, entrada_n2):
 def abrir_cadastro():
 
     janela = tk.Tk()
-    janela.title('Gordos burguer')
-    janela.geometry('700x600')
+    janela.title('Cadastro')
+    janela.geometry('500x200')
+    janela.iconbitmap("burguer.ico")
 
+    form_campo = tk.Frame(janela)
+    form_campo.pack(pady=20)
 
+    logo = PhotoImage(file="burguer.png")
+    label_logo = tk.Label(form_campo, image=logo, bg='#ff3333')
+    label_logo.pack(pady=20)
 
-    tk.Label(janela, text='digite o usuario' , font=('Arial', 15, 'bold')).pack(pady=10)
-    entrada_n1 = tk.Entry(janela, font=('Arial', 15, 'bold'), width=20)
-    entrada_n1.pack(pady=10)
+    tk.Label(form_campo, text='Usuário:' , font=('Arial', 12, 'bold')).grid(row=0, column=0, padx=5, pady=10)
+    entrada_n1 = tk.Entry(form_campo, font=('Arial', 12, 'bold'), width=20)
+    entrada_n1.grid(row=0, column=1, padx=5, pady=10)
 
-    tk.Label(janela, text='digite a senha' , font=('Arial', 15, 'bold')).pack(pady=10)
-    entrada_n2 = tk.Entry(janela, font=('Arial', 15, 'bold'), width=20)
-    entrada_n2.pack(pady=10)
+    tk.Label(form_campo, text='Senha:' , font=('Arial', 12, 'bold')).grid(row=1, column=0, padx=5, pady=10)
+    entrada_n2 = tk.Entry(form_campo, font=('Arial', 12, 'bold'), width=20)
+    entrada_n2.grid(row=1, column=1, padx=5, pady=10)
 
     button1 = tk.Button(janela, text="cadastrar-se", command=lambda: cadastrar(entrada_n1, entrada_n2), bg="white")
     button1.pack(pady=10)
-
-
-    logo = PhotoImage(file="burguer.png")
-    label_logo = tk.Label(janela, image=logo, bg='#ff3333')
-    label_logo.pack(pady=20)
-
 
     entrada_n2.focus()
     entrada_n1.focus()
