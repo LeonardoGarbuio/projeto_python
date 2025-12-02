@@ -1,6 +1,7 @@
 from tkinter import messagebox
 import mysql.connector
 import tkinter as tk
+from PIL import Image, ImageTk
 from cadastro import abrir_cadastro
 from principal import abrir_principal
 
@@ -34,19 +35,32 @@ def abre_janela():
 
 janela = tk.Tk()
 janela.title('Login')
-janela.geometry('400x200')
+janela.geometry('450x200')
 janela.iconbitmap("burguer.ico")
 
-form_campo = tk.Frame(janela)
-form_campo.pack(pady=20)
 
-tk.Label(form_campo, text='Usuário:', font=('Arial', 12, 'bold')).grid(row=0, column=0, padx=5, pady=10)
+img = Image.open("burguer.png")
+img = img.resize((120, 120))
+img = ImageTk.PhotoImage(img)
+
+frame_principal = tk.Frame(janela)
+frame_principal.pack(pady=10)
+
+label_img = tk.Label(frame_principal, image=img)
+label_img.grid(row=0, column=0, rowspan=3, padx=10)
+
+
+form_campo = tk.Frame(frame_principal)
+form_campo.grid(row=0, column=1, padx=10)
+
+tk.Label(form_campo, text='Usuário:', font=('Arial', 12, 'bold')).grid(row=0, column=0, pady=5)
 entrada_n1 = tk.Entry(form_campo, font=('Arial', 12), width=20)
-entrada_n1.grid(row=0, column=1, padx=5, pady=10)
+entrada_n1.grid(row=0, column=1, pady=5)
 
-tk.Label(form_campo, text='Senha:' , font=('Arial', 12, 'bold')).grid(row=1, column=0, padx=5, pady=10)
+tk.Label(form_campo, text='Senha:' , font=('Arial', 12, 'bold')).grid(row=1, column=0, pady=5)
 entrada_n2 = tk.Entry(form_campo, font=('Arial', 12), width=20, show="*")
-entrada_n2.grid(row=1, column=1, padx=5, pady=10)
+entrada_n2.grid(row=1, column=1, pady=5)
+
 
 frame_button = tk.Frame(janela)
 frame_button.pack(pady=10)
