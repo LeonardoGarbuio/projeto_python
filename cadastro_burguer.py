@@ -4,7 +4,7 @@ import tkinter as tk
 
 try:
     conexao = mysql.connector.connect(
-        host="localhost", user="root", password="202330", database="telas_python"
+        host="localhost", user="root", password="", database="telas_python"
     )
     cursor = conexao.cursor()
     print("Conexão bem sucedida!")
@@ -12,7 +12,7 @@ try:
 except mysql.connector.Error as erro:
     print(f"Erro ao conectar: {erro}")
 
-usuario = "cliente_teste"
+usuario = "gerente"
 
 molho = ""
 carne = ""
