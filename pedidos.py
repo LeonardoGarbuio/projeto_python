@@ -1,8 +1,6 @@
 import mysql.connector
 import tkinter as tk
 
-from cadastro_burguer import usuario
-
 try:
     conexao = mysql.connector.connect(
         host="localhost", user="root", password="", database="telas_python"
