@@ -4,7 +4,7 @@ import tkinter as tk
 from PIL import Image, ImageTk
 
 from principal import abrir_principal
-
+from pedidos import abrir_pedidos
 
 
 try:
@@ -66,10 +66,15 @@ def fazer_login(entrada_n1, entrada_n2, janela):
     resultado = cursor.fetchone()
 
     if resultado:
-        janela.destroy()
-        abrir_principal()
+        id_usuario = resultado[0]
+        if usuario == 'cozinheiro':
+            janela.destroy()
+            abrir_pedidos()
+        else:
+            janela.destroy()
+            abrir_principal(id_usuario)
     else:
-        messagebox.showerror(title="Erro", message="Ce não sabe usar um login.")
+        messagebox.showerror(title="Erro", message="Usuário ou Senha incorretos")
 
 
 def abre_janela(janela):
