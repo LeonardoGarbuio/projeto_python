@@ -2,8 +2,6 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import mysql.connector
 import tkinter as tk
-global janela
-global entrada_n1, entrada_n2
 
 from login import abre_login
 
