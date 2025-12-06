@@ -2,8 +2,6 @@ from tkinter import messagebox
 from PIL import Image, ImageTk
 import mysql.connector
 import tkinter as tk
-from tkinter import PhotoImage
-from pyexpat.errors import messages
 global janela
 global entrada_n1, entrada_n2
 
@@ -14,10 +12,9 @@ try:
     conexao = mysql.connector.connect(
         host="localhost", user="root", password="", database="telas_python"
     )
-    print("")
-
+    cursor = conexao.cursor()
 except mysql.connector.Error as erro:
-    print("")
+    print(f"Erro ao conectar: {erro}")
 
 
 def cadastrar(entrada_n1, entrada_n2, janela):
@@ -27,19 +24,17 @@ def cadastrar(entrada_n1, entrada_n2, janela):
     if usuario == "" or senha == "":
             messagebox.showwarning(title='Atenção', message='Digite um Usuário e uma Senha válidos.')
     else:
-        messagebox.showwarning(title='Atenção', message='Cadastro realizado com sucesso.')
-        janela.destroy()
-        abre_login()
-
-
-        sql = f"INSERT INTO login (usuario, senha) VALUES ('{usuario}', '{senha}')"
-
-        conexao.cursor().execute(sql)
-        conexao.commit()
+        try:
+            cursor.execute("INSERT INTO login (usuario, senha) VALUES (%s, %s)", (usuario, senha))
+            conexao.commit()
+            messagebox.showinfo(title='Sucesso', message='Cadastro realizado com sucesso.')
+            janela.destroy()
+            abre_login()
+        except mysql.connector.Error as e:
+            messagebox.showerror(title='Erro', message=f'Erro ao cadastrar: {e}')
 
 
 def abrir_cadastro():
-
     janela = tk.Tk()
     janela.title('Cadastro')
     janela.geometry('500x200')
@@ -59,7 +54,7 @@ def abrir_cadastro():
     form_campo = tk.Frame(frame_principal)
     form_campo.grid(row=0, column=1, padx=10)
 
-    tk.Label(form_campo, text='Usuário:', font=('Arial', 12, 'bold')).grid(row=0, column=0, pady=5)
+    tk.Label(form_campo, text='Nome:', font=('Arial', 12, 'bold')).grid(row=0, column=0, pady=5)
     entrada_n1 = tk.Entry(form_campo, font=('Arial', 12), width=20)
     entrada_n1.grid(row=0, column=1, pady=5)
 
