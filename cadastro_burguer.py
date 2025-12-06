@@ -11,8 +11,6 @@ try:
 except mysql.connector.Error as erro:
     print(f"Erro ao conectar: {erro}")
 
-nome = ""
-
 molho = ""
 carne = ""
 queijo = ""
@@ -25,7 +23,8 @@ picles = 0
 tomate = 0
 cebola = 0
 
-def salvar_no_banco():
+def salvar_no_banco(nome_entrada):
+    nome = nome_entrada.get()
     cursor.execute("INSERT INTO hamburguer (nome, molho, carne, queijo, pao, alface, bacon, ovo, picles, tomate, cebola) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)",
         params=(nome, molho, carne, queijo, pao, alface, bacon, ovo, picles, tomate, cebola)
     )
@@ -34,53 +33,96 @@ def salvar_no_banco():
 
 def selecionar(opcao_nome, valor):
     globals()[opcao_nome] = valor
-    messagebox.showinfo(title="Selecionado", message=f"{opcao_nome} = {valor}")
 
 def selecionar_extra(nome_extra):
     globals()[nome_extra] = 1 if globals()[nome_extra] == 0 else 0
     status = "Adicionado" if globals()[nome_extra] else "Removido"
-    messagebox.showinfo(title="OK", message=f"{status}: {nome_extra}")
 
 def abre_cadastro_burguer():
     janela = tk.Tk()
-    janela.title("Monte seu Hambúrguer")
-    janela.geometry("700x800")
+    janela.title("")
+    janela.geometry("400x500")
 
-    form_molho = tk.Frame(janela)
-    form_molho.grid(row=0, column=1, padx=10)
+    # --- CONTAINER COM SCROLL ---
+    container = tk.Frame(janela)
+    container.pack(fill="both", expand=True)
 
-    tk.Label(form_molho, text="Escolha o molho:", font=("Arial", 16)).pack(pady=5)
-    tk.Button(form_molho, text="Ketchup", command=lambda: selecionar(opcao_nome="molho", valor="ketchup")).pack()
-    tk.Button(form_molho, text="Mostarda", command=lambda: selecionar(opcao_nome="molho", valor="mostarda")).pack()
-    tk.Button(form_molho, text="Maionese", command=lambda: selecionar(opcao_nome="molho", valor="maionese")).pack()
-    tk.Button(form_molho, text="Barbecue", command=lambda: selecionar(opcao_nome="molho", valor="barbecue")).pack()
+    canvas = tk.Canvas(container)
+    canvas.pack(side="left", fill="both", expand=True)
 
-    tk.Label(janela, text="Escolha a carne:", font=("Arial", 16)).pack(pady=5)
-    tk.Button(janela, text="Bovina", command=lambda: selecionar(opcao_nome="carne", valor="carne_bovina")).pack()
-    tk.Button(janela, text="Suína", command=lambda: selecionar(opcao_nome="carne", valor="carne_suina")).pack()
-    tk.Button(janela, text="Caprina", command=lambda: selecionar(opcao_nome="carne", valor="carne_caprina")).pack()
-    tk.Button(janela, text="Frango", command=lambda: selecionar(opcao_nome="carne", valor="carne_frango")).pack()
+    scrollbar = tk.Scrollbar(container, orient="vertical", command=canvas.yview)
+    scrollbar.pack(side="right", fill="y")
 
-    tk.Label(janela, text="Escolha o queijo:", font=("Arial", 16)).pack(pady=5)
-    tk.Button(janela, text="Cheddar", command=lambda: selecionar(opcao_nome="queijo", valor="queijo_cheddar")).pack()
-    tk.Button(janela, text="Mussarela", command=lambda: selecionar(opcao_nome="queijo", valor="queijo_mussarela")).pack()
-    tk.Button(janela, text="Prato", command=lambda: selecionar(opcao_nome="queijo", valor="queijo_prato")).pack()
-    tk.Button(janela, text="Suíço", command=lambda: selecionar(opcao_nome="queijo", valor="queijo_suico")).pack()
+    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.bind('<Configure>', lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
 
-    tk.Label(janela, text="Escolha o pão:", font=("Arial", 16)).pack(pady=5)
-    tk.Button(janela, text="Brioche", command=lambda: selecionar(opcao_nome="pao", valor="pao_brioche")).pack()
-    tk.Button(janela, text="Australiano", command=lambda: selecionar(opcao_nome="pao", valor="pao_australiano")).pack()
-    tk.Button(janela, text="Gergelim", command=lambda: selecionar(opcao_nome="pao", valor="pao_gergelim")).pack()
-    tk.Button(janela, text="Francês", command=lambda: selecionar(opcao_nome="pao", valor="pao_frances")).pack()
+    frame_scroll = tk.Frame(canvas)
+    canvas.create_window((0, 0), window=frame_scroll, anchor="nw")
+    # --- FIM DO SCROLL ---
 
-    tk.Label(janela, text="Extras:", font=("Arial", 16)).pack(pady=5)
-    tk.Button(janela, text="Salada", command=lambda: selecionar_extra(nome_extra="salada")).pack()
-    tk.Button(janela, text="Bacon", command=lambda: selecionar_extra(nome_extra="bacon")).pack()
-    tk.Button(janela, text="Ovo", command=lambda: selecionar_extra(nome_extra="ovo")).pack()
-    tk.Button(janela, text="Picles", command=lambda: selecionar_extra(nome_extra="picles")).pack()
-    tk.Button(janela, text="Tomate", command=lambda: selecionar_extra(nome_extra="tomate")).pack()
-    tk.Button(janela, text="Cebola", command=lambda: selecionar_extra(nome_extra="cebola")).pack()
 
-    tk.Button(janela, text="SALVAR MEU BURGÃO", bg="green", fg="white", command=salvar_no_banco).pack(pady=20)
+    frame_molho = tk.Frame(frame_scroll, pady=10, bd=2, relief='groove')
+    frame_molho.pack(padx=10, pady=5, fill='x')
+
+    tk.Label(frame_molho, text="Escolha o molho:", font=("Arial", 16)).pack(pady=5)
+
+    tk.Button(frame_molho, text="Ketchup", command=lambda: selecionar("molho", "ketchup")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_molho, text="Mostarda", command=lambda: selecionar("molho", "mostarda")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_molho, text="Maionese", command=lambda: selecionar("molho", "maionese")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_molho, text="Barbecue", command=lambda: selecionar("molho", "barbecue")).pack(side='left', padx=10, fill='x')
+
+    frame_carne = tk.Frame(frame_scroll, pady=10, bd=2, relief='groove')
+    frame_carne.pack(padx=10, pady=5, fill='x')
+
+    tk.Label(frame_carne, text="Escolha a carne:", font=("Arial", 16)).pack(pady=5)
+
+    tk.Button(frame_carne, text="Bovina", command=lambda: selecionar("carne", "carne_bovina")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_carne, text="Suína", command=lambda: selecionar("carne", "carne_suina")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_carne, text="Caprina", command=lambda: selecionar("carne", "carne_caprina")).pack(side='left',padx=10, fill='x')
+    tk.Button(frame_carne, text="Frango", command=lambda: selecionar("carne", "carne_frango")).pack(side='left',padx=10, fill='x')
+
+
+    frame_queijo = tk.Frame(frame_scroll, pady=10, bd=2, relief='groove')
+    frame_queijo.pack(padx=10, pady=5, fill='x')
+
+    tk.Label(frame_queijo, text="Escolha o queijo:", font=("Arial", 16)).pack(pady=5)
+
+    tk.Button(frame_queijo, text="Cheddar", command=lambda: selecionar("queijo", "queijo_cheddar")).pack(side='left',padx=10, fill='x')
+    tk.Button(frame_queijo, text="Mussarela", command=lambda: selecionar("queijo", "queijo_mussarela")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_queijo, text="Prato", command=lambda: selecionar("queijo", "queijo_prato")).pack(side='left',padx=10, fill='x')
+    tk.Button(frame_queijo, text="Suíço", command=lambda: selecionar("queijo", "queijo_suico")).pack(side='left', padx=10, fill='x')
+
+
+    frame_pao = tk.Frame(frame_scroll, pady=10, bd=2, relief='groove')
+    frame_pao.pack(padx=10, pady=5, fill='x')
+
+    tk.Label(frame_pao, text="Escolha o pão:", font=("Arial", 16)).pack(pady=5)
+
+    tk.Button(frame_pao, text="Brioche", command=lambda: selecionar("pao", "pao_brioche")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_pao, text="Australiano", command=lambda: selecionar("pao", "pao_australiano")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_pao, text="Gergelim", command=lambda: selecionar("pao", "pao_gergelim")).pack(side='left', padx=10, fill='x')
+    tk.Button(frame_pao, text="Francês", command=lambda: selecionar("pao", "pao_frances")).pack(side='left', padx=10, fill='x')
+
+
+    frame_extras = tk.Frame(frame_scroll, pady=10, bd=2, relief='groove')
+    frame_extras.pack(padx=10, pady=5, fill='x')
+
+    tk.Label(frame_extras, text="Extras:", font=("Arial", 16)).pack(pady=5)
+
+    tk.Button(frame_extras, text="Alface", command=lambda: selecionar_extra("alface")).pack(side='left', padx=5, fill='x')
+    tk.Button(frame_extras, text="Bacon", command=lambda: selecionar_extra("bacon")).pack(side='left', padx=5, fill='x')
+    tk.Button(frame_extras, text="Ovo", command=lambda: selecionar_extra("ovo")).pack(side='left', padx=5, fill='x')
+    tk.Button(frame_extras, text="Picles", command=lambda: selecionar_extra("picles")).pack(side='left', padx=5, fill='x')
+    tk.Button(frame_extras, text="Tomate", command=lambda: selecionar_extra("tomate")).pack(side='left', padx=5, fill='x')
+    tk.Button(frame_extras, text="Cebola", command=lambda: selecionar_extra("cebola")).pack(side='left', padx=5, fill='x')
+
+    frame_login = tk.Frame(frame_scroll, pady=10, bd=2, relief='groove')
+    frame_login.pack(padx=10, pady=10, fill='x')  # ocupa horizontalmente
+
+    tk.Label(frame_login, text='Nome do Hamburguer:', font=('Arial', 12, 'bold')).pack(pady=5, padx=5)
+    nome_entrada = tk.Entry(frame_login, font=('Arial', 12))
+    nome_entrada.pack(fill='x', padx=5, pady=5)
+
+    tk.Button(frame_scroll, text="Salvar Hamburguer", command=lambda: salvar_no_banco(nome_entrada)).pack(pady=20)
 
     janela.mainloop()
