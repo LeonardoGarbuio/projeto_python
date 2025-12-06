@@ -5,7 +5,7 @@ from PIL import Image, ImageTk
 
 from principal import abrir_principal
 from pedidos import abrir_pedidos
-
+from cadastro_burguer import abre_cadastro_burguer
 
 try:
     conexao = mysql.connector.connect(
@@ -62,7 +62,7 @@ def fazer_login(entrada_n1, entrada_n2, janela):
     usuario = entrada_n1.get()
     senha = entrada_n2.get()
 
-    cursor.execute(f"SELECT * FROM login WHERE usuario='{usuario}' AND senha='{senha}'")
+    cursor.execute("SELECT * FROM login WHERE usuario=%s AND senha=%s", (usuario, senha))
     resultado = cursor.fetchone()
 
     if resultado:
@@ -70,6 +70,9 @@ def fazer_login(entrada_n1, entrada_n2, janela):
         if usuario == 'cozinheiro':
             janela.destroy()
             abrir_pedidos()
+        elif usuario == 'gerente':
+            janela.destroy()
+            abre_cadastro_burguer()
         else:
             janela.destroy()
             abrir_principal(id_usuario)
